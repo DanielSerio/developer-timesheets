@@ -1,0 +1,12 @@
+.table-root .table-row {
+  width: 100%;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+
+  &:not(.mobile) {
+    display: grid;
+  }
+
+  &.greenrow {
+    background: var(--mantine-color-default);
+  }
+}

@@ -1,0 +1,13 @@
+.pseudo-link {
+  background: transparent;
+  appearance: none;
+  outline: none;
+  font-size: inherit;
+  color: inherit;
+  font-family: inherit;
+  border: none;
+
+  &:not(:disabled):hover {
+    text-decoration: underline;
+  }
+}
