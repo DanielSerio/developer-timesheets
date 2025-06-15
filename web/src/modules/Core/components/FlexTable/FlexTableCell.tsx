@@ -32,13 +32,17 @@ export function FlexTableCell({
       className="cell"
       justify="space-between"
       flex={1}
-      w="100%"
       style={align ? { textAlign: align } : undefined}
     >
       <Box hiddenFrom={breakpoint}>
-        <Text fz={14}>{label}</Text>
+        <Text fz={14} style={{ textAlign: "left" }}>
+          {label}
+        </Text>
       </Box>
-      <Box>{children}</Box>
+      <Box hiddenFrom={breakpoint} w="100%" style={{ textAlign: "right" }}>
+        {children}
+      </Box>
+      <Box visibleFrom={breakpoint}>{children}</Box>
     </Flex>
   );
 }

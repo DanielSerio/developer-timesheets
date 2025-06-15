@@ -1,2 +1,12 @@
+.table-wrapper {
+  container-name: table-wrapper;
+  container-type: size;
+  position: absolute;
+  width: 100%;
+  height: calc(100svh - 96px);
+}
+
 .table-root {
+  height: calc(100% - 48px);
+  overflow-y: auto;
 }

@@ -1,0 +1,16 @@
+// @container table-wrapper (max-width: 75rem) {
+//   .table-root {
+//   }
+// }
+
+@media screen and (min-width: 36rem) {
+  .table-wrapper {
+    height: calc(100svh - 48px);
+  }
+}
+
+@media screen and (max-width: 75rem) {
+  .table-root .cell:not(:last-of-type) {
+    border-bottom: 1px dotted var(--mantine-color-default-border);
+  }
+}

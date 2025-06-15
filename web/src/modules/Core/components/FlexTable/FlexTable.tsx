@@ -1,4 +1,4 @@
-import { Flex, type MantineBreakpoint } from "@mantine/core";
+import { Box, Flex, type MantineBreakpoint } from "@mantine/core";
 import { flexRender, type ColumnDef, type Table } from "@tanstack/react-table";
 import type { Dispatch, PropsWithChildren, SetStateAction } from "react";
 import { FlexTableRow } from "./FlexTableRow";
@@ -9,7 +9,7 @@ export type FlexTableColumnConfig<T, TV = unknown> = ColumnDef<T, TV> & {
   size: number;
 };
 
-export interface FlexTableProps<T, TV = unknown> {
+export interface FlexTableProps<T, TV = unknown> extends PropsWithChildren<{}> {
   columns: FlexTableColumnConfig<T, TV>[];
   isLoading?: boolean;
   table: Table<T>;
@@ -52,6 +52,7 @@ function FlexTableBase<T, TV = unknown>({
   table,
   isLoading,
   breakpoint,
+  children,
 }: FlexTableProps<T, TV>) {
   if (isLoading) {
     return <>Loading...</>;
@@ -64,61 +65,67 @@ function FlexTableBase<T, TV = unknown>({
   );
 
   return (
-    <Flex direction="column" className="table-root">
-      <FlexTableHeader breakpoint={breakpoint ?? "lg"}>
-        <FlexTableRow
-          breakpoint={breakpoint ?? "lg"}
-          gridTemplateColumns={gridTemplateColumns}
-        >
-          {table.getFlatHeaders().map((header) => {
+    <Box className="table-wrapper">
+      {!!children && <Box className="table-toolbar">{children}</Box>}
+      <Flex direction="column" className="table-root">
+        <FlexTableHeader breakpoint={breakpoint ?? "lg"}>
+          <FlexTableRow
+            breakpoint={breakpoint ?? "lg"}
+            gridTemplateColumns={gridTemplateColumns}
+          >
+            {table.getFlatHeaders().map((header) => {
+              return (
+                <FlexTableHeadCell
+                  key={header.id}
+                  align={
+                    (header.column.columnDef.meta as Record<string, any>)
+                      ?.textAlign
+                  }
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </FlexTableHeadCell>
+              );
+            })}
+          </FlexTableRow>
+        </FlexTableHeader>
+        <FlexTableBody>
+          {table.getCoreRowModel().flatRows.map((row, index) => {
             return (
-              <FlexTableHeadCell
-                key={header.id}
-                align={
-                  (header.column.columnDef.meta as Record<string, any>)
-                    ?.textAlign
-                }
+              <FlexTableRow
+                key={row.id}
+                breakpoint={breakpoint ?? "lg"}
+                gridTemplateColumns={gridTemplateColumns}
+                greenrow={index % 2 === 0}
               >
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-              </FlexTableHeadCell>
+                {row.getVisibleCells().map((cell) => {
+                  return (
+                    <FlexTableCell
+                      key={cell.id}
+                      align={
+                        (cell.column.columnDef.meta as Record<string, any>)
+                          ?.textAlign
+                      }
+                      label={cell.column.columnDef.header as string}
+                      breakpoint={breakpoint ?? "lg"}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </FlexTableCell>
+                  );
+                })}
+              </FlexTableRow>
             );
           })}
-        </FlexTableRow>
-      </FlexTableHeader>
-      <FlexTableBody>
-        {table.getCoreRowModel().flatRows.map((row, index) => {
-          return (
-            <FlexTableRow
-              key={row.id}
-              breakpoint={breakpoint ?? "lg"}
-              gridTemplateColumns={gridTemplateColumns}
-              greenrow={index % 2 === 0}
-            >
-              {row.getVisibleCells().map((cell) => {
-                return (
-                  <FlexTableCell
-                    key={cell.id}
-                    align={
-                      (cell.column.columnDef.meta as Record<string, any>)
-                        ?.textAlign
-                    }
-                    label={cell.column.columnDef.header as string}
-                    breakpoint={breakpoint ?? "lg"}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </FlexTableCell>
-                );
-              })}
-            </FlexTableRow>
-          );
-        })}
-      </FlexTableBody>
-    </Flex>
+        </FlexTableBody>
+      </Flex>
+    </Box>
   );
 }
 

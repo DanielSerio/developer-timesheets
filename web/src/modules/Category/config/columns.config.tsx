@@ -1,14 +1,18 @@
-import { Checkbox, Flex } from "@mantine/core";
+import { Checkbox, Flex, type MantineBreakpoint } from "@mantine/core";
 import type { ReactNode } from "@tanstack/react-router";
 import { formatDistance } from "date-fns";
 import type { FlexTableColumnConfig } from "#modules/Core/components/FlexTable/FlexTable";
 import type { CategoryRecord } from "#types/entity/category.types";
 
 export interface GetCategoryColumnsProps {
+  breakpoint: MantineBreakpoint;
   launchEdit: (record: CategoryRecord) => void;
 }
 
-export function getCategoryColumns({ launchEdit }: GetCategoryColumnsProps) {
+export function getCategoryColumns({
+  breakpoint,
+  launchEdit,
+}: GetCategoryColumnsProps) {
   return [
     {
       id: "selected",
@@ -35,23 +39,44 @@ export function getCategoryColumns({ launchEdit }: GetCategoryColumnsProps) {
         </Flex>
       ),
       cell: ({ row }) => (
-        <Flex
-          className="py-1"
-          align="center"
-          justify="center"
-          w="100%"
-          h="100%"
-        >
-          <Checkbox
-            size="xs"
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler(),
-            }}
-          />
-        </Flex>
+        <>
+          <Flex
+            className="py-1"
+            align="center"
+            justify="flex-end"
+            hiddenFrom={breakpoint}
+            w="100%"
+            h="100%"
+          >
+            <Checkbox
+              size="xs"
+              {...{
+                checked: row.getIsSelected(),
+                disabled: !row.getCanSelect(),
+                indeterminate: row.getIsSomeSelected(),
+                onChange: row.getToggleSelectedHandler(),
+              }}
+            />
+          </Flex>
+          <Flex
+            className="py-1"
+            align="center"
+            justify="center"
+            visibleFrom={breakpoint}
+            w="100%"
+            h="100%"
+          >
+            <Checkbox
+              size="xs"
+              {...{
+                checked: row.getIsSelected(),
+                disabled: !row.getCanSelect(),
+                indeterminate: row.getIsSomeSelected(),
+                onChange: row.getToggleSelectedHandler(),
+              }}
+            />
+          </Flex>
+        </>
       ),
     },
     {
@@ -59,6 +84,9 @@ export function getCategoryColumns({ launchEdit }: GetCategoryColumnsProps) {
       header: "ID",
       accessorKey: "id",
       size: 40,
+      meta: {
+        textAlign: "center",
+      },
     },
     {
       id: "name",
