@@ -1,9 +1,13 @@
 import { Page } from "#modules/Core/components/Page";
 
-export function TimesheetPage() {
+export interface TimesheetPageProps {
+  timesheetId: number;
+}
+
+export function TimesheetPage({ timesheetId }: TimesheetPageProps) {
   return (
     <Page>
-      <div>TimesheetPage</div>
+      <div>TimesheetPage {timesheetId}</div>
     </Page>
   );
 }

@@ -9,15 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TimesheetRouteImport } from './routes/timesheet'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TimesheetsIdRouteImport } from './routes/timesheets.$id'
 
-const TimesheetRoute = TimesheetRouteImport.update({
-  id: '/timesheet',
-  path: '/timesheet',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CategoriesRoute = CategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
@@ -28,46 +23,44 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TimesheetsIdRoute = TimesheetsIdRouteImport.update({
+  id: '/timesheets/$id',
+  path: '/timesheets/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/categories': typeof CategoriesRoute
-  '/timesheet': typeof TimesheetRoute
+  '/timesheets/$id': typeof TimesheetsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/categories': typeof CategoriesRoute
-  '/timesheet': typeof TimesheetRoute
+  '/timesheets/$id': typeof TimesheetsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/categories': typeof CategoriesRoute
-  '/timesheet': typeof TimesheetRoute
+  '/timesheets/$id': typeof TimesheetsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/categories' | '/timesheet'
+  fullPaths: '/' | '/categories' | '/timesheets/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/categories' | '/timesheet'
-  id: '__root__' | '/' | '/categories' | '/timesheet'
+  to: '/' | '/categories' | '/timesheets/$id'
+  id: '__root__' | '/' | '/categories' | '/timesheets/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CategoriesRoute: typeof CategoriesRoute
-  TimesheetRoute: typeof TimesheetRoute
+  TimesheetsIdRoute: typeof TimesheetsIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/timesheet': {
-      id: '/timesheet'
-      path: '/timesheet'
-      fullPath: '/timesheet'
-      preLoaderRoute: typeof TimesheetRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/categories': {
       id: '/categories'
       path: '/categories'
@@ -82,13 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/timesheets/$id': {
+      id: '/timesheets/$id'
+      path: '/timesheets/$id'
+      fullPath: '/timesheets/$id'
+      preLoaderRoute: typeof TimesheetsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CategoriesRoute: CategoriesRoute,
-  TimesheetRoute: TimesheetRoute,
+  TimesheetsIdRoute: TimesheetsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
