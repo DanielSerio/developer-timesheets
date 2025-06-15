@@ -10,7 +10,8 @@
       "#styles/*": ["src/styles/*"],
       "#hooks/*": ["src/hooks/*"],
       "#modules/*": ["src/modules/*"],
-      "#const/*": ["src/const/*"]
+      "#const/*": ["src/const/*"],
+      "#providers/*": ["src/providers/*"]
     }
   }
 }
