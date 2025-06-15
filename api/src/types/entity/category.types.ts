@@ -1,4 +1,4 @@
-import type { Pretty } from "#types/utility";
+import type { Pretty } from "../utility";
 import type { EntityBase } from "./base.types";
 
 interface CategoryRecordBase extends EntityBase {
