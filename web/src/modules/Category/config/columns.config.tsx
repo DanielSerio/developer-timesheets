@@ -1,7 +1,8 @@
+import { Checkbox, Flex } from "@mantine/core";
+import type { ReactNode } from "@tanstack/react-router";
+import { formatDistance } from "date-fns";
 import type { FlexTableColumnConfig } from "#modules/Core/components/FlexTable/FlexTable";
 import type { CategoryRecord } from "#types/entity/category.types";
-import { Checkbox } from "@mantine/core";
-import type { ReactNode } from "@tanstack/react-router";
 
 export interface GetCategoryColumnsProps {
   launchEdit: (record: CategoryRecord) => void;
@@ -11,19 +12,38 @@ export function getCategoryColumns({ launchEdit }: GetCategoryColumnsProps) {
   return [
     {
       id: "selected",
-      size: 40,
+      size: 60,
+      meta: {
+        textAlign: "center",
+      },
       header: ({ table }) => (
-        <Checkbox
-          {...{
-            checked: table.getIsAllRowsSelected(),
-            indeterminate: table.getIsSomeRowsSelected(),
-            onChange: table.getToggleAllRowsSelectedHandler(),
-          }}
-        />
+        <Flex
+          className="py-1"
+          align="center"
+          justify="center"
+          w="100%"
+          h="100%"
+        >
+          <Checkbox
+            size="xs"
+            {...{
+              checked: table.getIsAllRowsSelected(),
+              indeterminate: table.getIsSomeRowsSelected(),
+              onChange: table.getToggleAllRowsSelectedHandler(),
+            }}
+          />
+        </Flex>
       ),
       cell: ({ row }) => (
-        <div className="px-1">
+        <Flex
+          className="py-1"
+          align="center"
+          justify="center"
+          w="100%"
+          h="100%"
+        >
           <Checkbox
+            size="xs"
             {...{
               checked: row.getIsSelected(),
               disabled: !row.getCanSelect(),
@@ -31,7 +51,7 @@ export function getCategoryColumns({ launchEdit }: GetCategoryColumnsProps) {
               onChange: row.getToggleSelectedHandler(),
             }}
           />
-        </div>
+        </Flex>
       ),
     },
     {
@@ -42,6 +62,7 @@ export function getCategoryColumns({ launchEdit }: GetCategoryColumnsProps) {
     },
     {
       id: "name",
+      header: "Name",
       accessorKey: "name",
       size: 420,
       cell: (row) => {
@@ -62,11 +83,26 @@ export function getCategoryColumns({ launchEdit }: GetCategoryColumnsProps) {
     },
     {
       id: "createdAt",
+      header: "Created",
       accessorKey: "createdAt",
       size: 140,
+      cell({ row }) {
+        const { createdAt } = row.original;
+        const stamp = `${new Date().toLocaleDateString()} 00:00:00.000`;
+        const createdStamp = `${`${createdAt}`.replace("T", " ")}`.replace(
+          /Z$/,
+          ""
+        );
+        const formattedTimeDistance = formatDistance(stamp, createdStamp, {
+          addSuffix: true,
+        });
+
+        return <span title={createdStamp}>{formattedTimeDistance}</span>;
+      },
     },
     {
       id: "lastUpdatedAt",
+      header: "Updated",
       accessorKey: "lastUpdatedAt",
       size: 140,
     },

@@ -72,7 +72,13 @@ function FlexTableBase<T, TV = unknown>({
         >
           {table.getFlatHeaders().map((header) => {
             return (
-              <FlexTableHeadCell key={header.id}>
+              <FlexTableHeadCell
+                key={header.id}
+                align={
+                  (header.column.columnDef.meta as Record<string, any>)
+                    ?.textAlign
+                }
+              >
                 {header.isPlaceholder
                   ? null
                   : flexRender(
@@ -95,7 +101,15 @@ function FlexTableBase<T, TV = unknown>({
             >
               {row.getVisibleCells().map((cell) => {
                 return (
-                  <FlexTableCell key={cell.id}>
+                  <FlexTableCell
+                    key={cell.id}
+                    align={
+                      (cell.column.columnDef.meta as Record<string, any>)
+                        ?.textAlign
+                    }
+                    label={cell.column.columnDef.header as string}
+                    breakpoint={breakpoint ?? "lg"}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </FlexTableCell>
                 );
