@@ -27,6 +27,10 @@ export function CategoryListPage() {
   });
 
   const toggle = () => editModeController[1]((value) => !value);
+  //TODO:
+  // * reset row selection on edit mode change
+  // * Create modal
+  // * Edit/delete modal
 
   return (
     <Page>
