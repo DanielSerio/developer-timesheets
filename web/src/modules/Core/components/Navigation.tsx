@@ -20,13 +20,13 @@ function AutoNavContent({
   icon?: IconType;
 }) {
   return (
-    <Flex>
+    <Flex gap={4} align="center">
       <Box component="span" className="text">
         {title}
       </Box>
       {!!Icon && (
         <Box component="span" className="icon">
-          <Icon />
+          <Icon size={18} style={{ transform: "translateY(2px)" }} />
         </Box>
       )}
     </Flex>
@@ -43,7 +43,7 @@ function NavigationLink({ to, children, title, icon }: NavigationLinkProps) {
 
 export function Navigation() {
   return (
-    <Group h={HEADER_HEIGHT}>
+    <Group className="navigation" h={HEADER_HEIGHT}>
       <NavigationLink to="/" title="Timesheets" icon={TbFileSpreadsheet} />
       <NavigationLink to="/categories" title="Categories" icon={TbCategory2} />
     </Group>

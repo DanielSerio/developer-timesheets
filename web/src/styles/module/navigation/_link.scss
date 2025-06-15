@@ -1,0 +1,23 @@
+@use "../../config";
+
+.navigation a {
+  font-size: 0.8rem;
+  padding: 4px 6px;
+  border-radius: config.to-rem(3);
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.6;
+
+  &:hover,
+  &.active {
+    opacity: 1;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.active {
+    color: var(--mantine-color-anchor);
+  }
+}
