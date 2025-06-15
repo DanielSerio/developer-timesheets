@@ -31,7 +31,8 @@
       "#modules/*": ["src/modules/*"],
       "#const/*": ["src/const/*"],
       "#providers/*": ["src/providers/*"],
-      "#types/*": ["src/types/*"]
+      "#types/*": ["src/types/*"],
+      "#services/*": ["src/services/*"]
     }
   },
   "include": ["src"]

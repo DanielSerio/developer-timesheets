@@ -1,3 +1,4 @@
+import { CategoriesProvider } from "#modules/Category/hooks/useCategories";
 import { CategoryListPage } from "#modules/Category/pages/CategoryListPage";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -6,5 +7,9 @@ export const Route = createFileRoute("/categories")({
 });
 
 function RouteComponent() {
-  return <CategoryListPage />;
+  return (
+    <CategoriesProvider mock={true}>
+      <CategoryListPage />
+    </CategoriesProvider>
+  );
 }

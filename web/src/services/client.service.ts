@@ -19,44 +19,53 @@ export abstract class ClientService<
     }
   };
 
-  protected async list() {
-    const response = await fetch(this.URL, this.DEFAULT_OPTIONS);
+  list = async (mock?: boolean) => {
+    const URL = `${this.URL}${mock ? `?mock=true` : ''}`;
+    console.info(`FETCHING: ${URL}`);
+    const response = await fetch(URL, this.DEFAULT_OPTIONS);
 
     return await response.json() as RecordType[];
-  }
+  };
 
-  protected async find(id: number) {
-    const response = await fetch(`${this.URL}/${id}`, this.DEFAULT_OPTIONS);
+  find = async (id: number, mock?: boolean) => {
+    const URL = `${this.URL}/${id}${mock ? `?mock=true` : ''}`;
+    const response = await fetch(URL, this.DEFAULT_OPTIONS);
 
     return await response.json() as RecordType | null;
-  }
+  };
 
-  protected async create(body: CreateType) {
-    const response = await fetch(`${this.URL}`, {
+  create = async (body: CreateType, mock?: boolean) => {
+    const URL = `${this.URL}${mock ? `?mock=true` : ''}`;
+
+    const response = await fetch(URL, {
       ... this.DEFAULT_OPTIONS,
       method: 'POST',
       body: JSON.stringify(body)
     });
 
     return await response.json() as RecordType;
-  }
+  };
 
-  protected async update(id: number, body: UpdateType) {
-    const response = await fetch(`${this.URL}/${id}`, {
+  update = async (id: number, body: UpdateType, mock?: boolean) => {
+    const URL = `${this.URL}/${id}${mock ? `?mock=true` : ''}`;
+
+    const response = await fetch(URL, {
       ... this.DEFAULT_OPTIONS,
       method: 'PATCH',
       body: JSON.stringify(body)
     });
 
     return await response.json() as RecordType;
-  }
+  };
 
-  protected async delete(id: number) {
-    const response = await fetch(`${this.URL}/${id}`, {
+  delete = async (id: number, mock?: boolean) => {
+    const URL = `${this.URL}/${id}${mock ? `?mock=true` : ''}`;
+
+    const response = await fetch(URL, {
       ...this.DEFAULT_OPTIONS,
       method: 'DELETE'
     });
 
     return await response.json() as { raw: string; affectedRows: number; };
-  }
+  };
 }
