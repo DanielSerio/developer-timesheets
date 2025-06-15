@@ -1,1 +1,4 @@
-export class CreateTimesheetDto {}
+export class CreateTimesheetDto {
+  name: string;
+  date: Date;
+}

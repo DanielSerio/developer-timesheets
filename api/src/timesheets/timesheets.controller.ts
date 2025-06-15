@@ -1,34 +1,126 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { TimesheetsService } from './timesheets.service';
 import { CreateTimesheetDto } from './dto/create-timesheet.dto';
 import { UpdateTimesheetDto } from './dto/update-timesheet.dto';
+import { MockableController } from '../shared/mockable.controller';
+import { Mockable } from '../shared/mockable.decorator';
+import { MOCK_TIMESHEETS } from './mock/data.mock';
+import { MockTimesheet } from './mock/timesheet.mock';
+import { TimesheetBody, TimesheetCreate } from '#types/entity/timesheet.types';
+import { DeleteResult } from 'typeorm';
+import { Pretty } from '#types/utility';
 
 @Controller('timesheets')
-export class TimesheetsController {
-  constructor(private readonly timesheetsService: TimesheetsService) {}
+export class TimesheetsController extends MockableController {
+  constructor(private readonly timesheetsService: TimesheetsService) {
+    super();
+  }
+
+  private handleMockGetMany() {
+    return this.simulateResponse(() => MOCK_TIMESHEETS);
+  }
+
+  private handleMockGetOne(id: number) {
+    return this.simulateResponse(() => {
+      const found = MOCK_TIMESHEETS[id] ?? null;
+
+      if (found === null) {
+        throw new NotFoundException();
+      }
+
+      return found;
+    });
+  }
+
+  private handleMockCreate(create: TimesheetCreate) {
+    const nextId = MOCK_TIMESHEETS.length;
+
+    return this.simulateResponse(() => {
+      const created = new MockTimesheet({ index: nextId });
+
+      created.name = create.name;
+      created.date = create.date;
+
+      return created;
+    });
+  }
+
+  private async handleMockUpdate(id: number, update: Partial<Omit<TimesheetBody, 'id'>>) {
+    const found = await this.handleMockGetOne(id);
+
+    Object.assign(found, update);
+
+    return found;
+  }
+
+  private async handleMockDelete(id: number) {
+    await this.handleMockGetOne(id);
+
+    type Res = Pretty<DeleteResult>;
+
+    return {
+      raw: '',
+      affected: 1
+    } satisfies Res;
+  }
 
   @Post()
-  create(@Body() createTimesheetDto: CreateTimesheetDto) {
+  create(
+    @Mockable() mock: boolean,
+    @Body() createTimesheetDto: CreateTimesheetDto
+  ) {
+    if (mock) {
+      return this.handleMockCreate(createTimesheetDto);
+    }
+
     return this.timesheetsService.create(createTimesheetDto);
   }
 
   @Get()
-  findAll() {
+  findAll(
+    @Mockable() mock: boolean
+  ) {
+    if (mock) {
+      return this.handleMockGetMany();
+    }
+
     return this.timesheetsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(
+    @Mockable() mock: boolean,
+    @Param('id') id: string
+  ) {
+    if (mock) {
+      return this.handleMockGetOne(+id);
+    }
+
     return this.timesheetsService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTimesheetDto: UpdateTimesheetDto) {
+  update(
+    @Mockable() mock: boolean,
+    @Param('id') id: string,
+    @Body() updateTimesheetDto: UpdateTimesheetDto
+  ) {
+    if (mock) {
+      return this.handleMockUpdate(+id, updateTimesheetDto);
+    }
+
     return this.timesheetsService.update(+id, updateTimesheetDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(
+    @Mockable() mock: boolean,
+    @Param('id') id: string
+  ) {
+    if (mock) {
+      return this.handleMockDelete(+id);
+    }
+
     return this.timesheetsService.remove(+id);
   }
 }

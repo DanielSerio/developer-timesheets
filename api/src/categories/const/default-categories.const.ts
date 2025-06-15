@@ -2,31 +2,30 @@ import { CategoryCreate } from "src/types/entity/category.types";
 
 export const DEFAULT_CATEGORY_PARAMS: CategoryCreate[] = [
   {
-    name: 'Administrative'
-  },
-
-  {
-    name: 'Deployment'
+    name: 'Administrative' // 1
   },
   {
-    name: 'Design'
+    name: 'Deployment' // 2
   },
   {
-    name: 'Development'
+    name: 'Design' // 3
   },
   {
-    name: 'Meeting'
+    name: 'Development' // 4
   },
   {
-    name: 'Planning'
+    name: 'Meeting' // 5
   },
   {
-    name: 'Requirements'
+    name: 'Planning' // 6
   },
   {
-    name: 'Testing'
+    name: 'Requirements' // 7
   },
   {
-    name: 'Troubleshooting'
+    name: 'Testing' // 8
+  },
+  {
+    name: 'Troubleshooting' // 9
   }
 ];
