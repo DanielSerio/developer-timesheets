@@ -30,7 +30,8 @@
       "#hooks/*": ["src/hooks/*"],
       "#modules/*": ["src/modules/*"],
       "#const/*": ["src/const/*"],
-      "#providers/*": ["src/providers/*"]
+      "#providers/*": ["src/providers/*"],
+      "#types/*": ["src/types/*"]
     }
   },
   "include": ["src"]
