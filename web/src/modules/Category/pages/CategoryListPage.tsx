@@ -26,6 +26,10 @@ export function CategoryListPage() {
       return "Update Category";
     }
 
+    if (modalState?.context === "delete") {
+      return "Delete Categoies";
+    }
+
     return "Create Category";
   };
 
@@ -37,7 +41,11 @@ export function CategoryListPage() {
         onClose={dismissModal}
       >
         {modalState?.context === "delete" ? (
-          <DeleteCategoriesForm rowSelection={rowSelection} rows={list.data!} />
+          <DeleteCategoriesForm
+            rowSelection={rowSelection}
+            rows={list.data!}
+            onClose={dismissModal}
+          />
         ) : (
           <CategoryForm
             initialValue={modalState?.record ?? undefined}
