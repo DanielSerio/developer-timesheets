@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query } from '@nestjs/common';
 import { TimesheetsService } from './timesheets.service';
 import { CreateTimesheetDto } from './dto/create-timesheet.dto';
 import { UpdateTimesheetDto } from './dto/update-timesheet.dto';
@@ -8,7 +8,8 @@ import { MOCK_TIMESHEETS } from './mock/data.mock';
 import { MockTimesheet } from './mock/timesheet.mock';
 import { TimesheetBody, TimesheetCreate } from '#types/entity/timesheet.types';
 import { DeleteResult } from 'typeorm';
-import { Pretty } from '#types/utility';
+import { DateRange, Pretty } from '#types/utility';
+import { eachDayOfInterval } from 'date-fns';
 
 @Controller('timesheets')
 export class TimesheetsController extends MockableController {
@@ -16,8 +17,46 @@ export class TimesheetsController extends MockableController {
     super();
   }
 
-  private handleMockGetMany() {
-    return this.simulateResponse(() => MOCK_TIMESHEETS);
+  private getDateRange(range?: string): DateRange | null {
+    if (!range || range.trim().length === 0) {
+      return null;
+    }
+
+    const fromTo = range.split(/[,]/g);
+
+    const toDate = (value: string) => new Date(Date.parse(value));
+
+    if (fromTo.length === 1) {
+      return {
+        from: null,
+        to: toDate(fromTo[0])
+      };
+    }
+
+    const [from, to] = fromTo;
+
+    return {
+      from: toDate(from),
+      to: toDate(to)
+    };
+  }
+
+  private handleMockGetMany(range?: string) {
+    const dateRange = this.getDateRange(range);
+
+    if (!dateRange) {
+      return this.simulateResponse(() => MOCK_TIMESHEETS);
+    }
+
+    const allDays = eachDayOfInterval({ start: dateRange.from ?? dateRange.to, end: dateRange.to });
+    const randomDay = () => allDays[~~(Math.random() * allDays.length)];
+
+    return this.simulateResponse(() => {
+
+      return MOCK_TIMESHEETS
+        .map((sheet) => ({ ...sheet, date: randomDay() }))
+        .sort((a, b) => a.date.toDateString().localeCompare(b.date.toDateString()));
+    });
   }
 
   private handleMockGetOne(id: number) {
@@ -78,10 +117,11 @@ export class TimesheetsController extends MockableController {
 
   @Get()
   findAll(
-    @Mockable() mock: boolean
+    @Mockable() mock: boolean,
+    @Query('range') range?: string
   ) {
     if (mock) {
-      return this.handleMockGetMany();
+      return this.handleMockGetMany(range);
     }
 
     return this.timesheetsService.findAll();
