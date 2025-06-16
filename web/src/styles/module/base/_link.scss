@@ -7,7 +7,11 @@
   font-family: inherit;
   border: none;
 
-  &:not(:disabled):hover {
-    text-decoration: underline;
+  &:not(:disabled) {
+    color: var(--mantine-color-anchor);
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }

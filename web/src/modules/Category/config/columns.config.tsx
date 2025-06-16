@@ -116,12 +116,17 @@ export function getCategoryColumns({
       size: 140,
       cell({ row }) {
         const { createdAt } = row.original;
-        const stamp = `${new Date().toLocaleDateString()} 00:00:00.000`;
+        const nowDate = new Date()
+          .toISOString()
+          .replace("T", " ")
+          .replace(/Z$/, "");
+        const stamp = `${nowDate}`;
         const createdStamp = `${`${createdAt}`.replace("T", " ")}`.replace(
           /Z$/,
           ""
         );
-        const formattedTimeDistance = formatDistance(stamp, createdStamp, {
+
+        const formattedTimeDistance = formatDistance(createdStamp, stamp, {
           addSuffix: true,
         });
 
