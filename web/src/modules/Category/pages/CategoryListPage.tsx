@@ -1,88 +1,92 @@
+import { TbLock, TbLockOpen, TbPlus, TbTrash } from "react-icons/tb";
+import { ActionIcon, Button, Group, Modal, Text } from "@mantine/core";
 import { FlexTable } from "#modules/Core/components/FlexTable/FlexTable";
 import { Page } from "#modules/Core/components/Page";
-import { useState } from "react";
-import { getCategoryColumns } from "../config/columns.config";
-import { useCategories } from "../hooks/useCategories";
-import { useCategoriesTable } from "../hooks/useCategoriesTable";
-import type { CategoryRecord } from "#types/entity/category.types";
-import { TbLock, TbLockOpen, TbPlus, TbTrash } from "react-icons/tb";
-import { ActionIcon, Button, Group, Text } from "@mantine/core";
+import { CategoryForm } from "../forms/CategoryForm";
+import { useCategoriesListPage } from "../hooks/useCategoriesListPage";
+import { DeleteCategoriesForm } from "../forms/DeleteCategoriesForm";
 
 export function CategoryListPage() {
-  const launchEdit = (record: CategoryRecord) => alert(JSON.stringify(record));
-  const [rowSelection, setRowSelection] = useState({});
+  const {
+    modalState,
+    modalController: { launchCreateModal, launchDeleteModal, dismissModal },
+    editModeController,
+    categoriesController,
+    rowSelectionController,
+    table,
+    columns,
+    toggleEditMode,
+  } = useCategoriesListPage();
+  const [{ list }] = categoriesController;
+  const [isEditMode] = editModeController;
+  const [rowSelection] = rowSelectionController;
 
-  const CATEGORY_COLUMNS = getCategoryColumns({
-    launchEdit,
-    breakpoint: "lg",
-  });
-  const [{ list }] = useCategories();
-  const editModeController = useState(false);
-  const [isEditMode, setIsEditMode] = editModeController;
-  const table = useCategoriesTable({
-    query: list,
-    controller: editModeController,
-    columns: CATEGORY_COLUMNS,
-    rowSelection,
-    setRowSelection,
-  });
+  const getTitle = () => {
+    if (modalState?.context === "update") {
+      return "Update Category";
+    }
 
-  //TODO:
-  // * Create modal
-  // * Edit/delete modal
-
-  const toggle = () => {
-    setIsEditMode((value) => {
-      const nextValue = !value;
-
-      if (nextValue) {
-        setRowSelection({});
-      }
-
-      return nextValue;
-    });
+    return "Create Category";
   };
 
   return (
-    <Page>
-      <FlexTable
-        editModeController={editModeController}
-        columns={CATEGORY_COLUMNS}
-        table={table}
-        isLoading={list.isLoading}
+    <>
+      <Modal
+        title={getTitle()}
+        opened={modalState !== null && !!modalState.context}
+        onClose={dismissModal}
       >
-        <Group h="100%" justify="flex-end" pr="sm">
-          <ActionIcon
-            variant="subtle"
-            color={isEditMode ? "teal" : "dark"}
-            onClick={() => toggle()}
-          >
-            {isEditMode ? <TbLockOpen /> : <TbLock />}
-          </ActionIcon>
-          {!!isEditMode && (
-            <>
-              {Object.keys(rowSelection).length > 0 && (
+        {modalState?.context === "delete" ? (
+          <DeleteCategoriesForm rowSelection={rowSelection} rows={list.data!} />
+        ) : (
+          <CategoryForm
+            initialValue={modalState?.record ?? undefined}
+            onClose={dismissModal}
+          />
+        )}
+      </Modal>
+      <Page>
+        <FlexTable
+          editModeController={editModeController}
+          columns={columns}
+          table={table}
+          isLoading={list.isLoading}
+        >
+          <Group h="100%" justify="flex-end" pr="sm">
+            <ActionIcon
+              variant="subtle"
+              color={isEditMode ? "teal" : "dark"}
+              onClick={() => toggleEditMode()}
+            >
+              {isEditMode ? <TbLockOpen /> : <TbLock />}
+            </ActionIcon>
+            {!!isEditMode && (
+              <>
+                {Object.keys(rowSelection).length > 0 && (
+                  <Button
+                    variant="light"
+                    color="red"
+                    size="xs"
+                    rightSection={<TbTrash />}
+                    onClick={() => launchDeleteModal()}
+                  >
+                    <Text size="xs">Delete Categories</Text>
+                  </Button>
+                )}
                 <Button
                   variant="light"
-                  color="red"
+                  color="blue"
                   size="xs"
-                  rightSection={<TbTrash />}
+                  rightSection={<TbPlus />}
+                  onClick={launchCreateModal}
                 >
-                  <Text size="xs">Delete Categories</Text>
+                  <Text size="xs">Create Category</Text>
                 </Button>
-              )}
-              <Button
-                variant="light"
-                color="blue"
-                size="xs"
-                rightSection={<TbPlus />}
-              >
-                <Text size="xs">Create Category</Text>
-              </Button>
-            </>
-          )}
-        </Group>
-      </FlexTable>
-    </Page>
+              </>
+            )}
+          </Group>
+        </FlexTable>
+      </Page>
+    </>
   );
 }
