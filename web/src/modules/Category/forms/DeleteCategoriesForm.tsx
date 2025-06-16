@@ -6,6 +6,8 @@ import { Group } from "@mantine/core";
 export interface DeleteCategoriesFormProps {
   rowSelection: Record<number, boolean>;
   rows: CategoryRecord[];
+  isBusy: boolean;
+  onSubmit: () => Promise<void>;
   onClose: () => void;
 }
 
@@ -25,13 +27,20 @@ function getFilteredRows({
 }
 
 export function DeleteCategoriesForm({
+  isBusy,
   onClose,
+  onSubmit,
   ...props
 }: DeleteCategoriesFormProps) {
   const rows = getFilteredRows(props);
 
   return (
-    <form>
+    <form
+      onSubmit={(ev) => {
+        ev.preventDefault();
+        onSubmit();
+      }}
+    >
       <p>Are you sure you wish to delete the following categories?</p>
       <ul>
         {rows.map((row) => (
@@ -40,8 +49,8 @@ export function DeleteCategoriesForm({
       </ul>
 
       <Group component="footer" justify="flex-end" mt="md">
-        <CancelButton onClick={onClose} />
-        <DestructiveButton />
+        <CancelButton disabled={isBusy} onClick={onClose} />
+        <DestructiveButton isBusy={isBusy} />
       </Group>
     </form>
   );

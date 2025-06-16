@@ -58,6 +58,17 @@ export class CategoriesController extends MockableController {
     } satisfies Res;
   }
 
+  private async handleMockDeleteMany(ids: number[]) {
+    return this.simulateResponse(() => {
+      type Res = Pretty<DeleteResult>;
+
+      return {
+        raw: '',
+        affected: ids.length
+      } satisfies Res;
+    });
+  }
+
 
   @Post()
   create(
@@ -80,6 +91,20 @@ export class CategoriesController extends MockableController {
     }
 
     return this.categoriesService.findAll();
+  }
+
+  @Patch('delete')
+  deleteMany(
+    @Mockable() mock: boolean,
+    @Body() ids: number[]
+  ) {
+    const parsedIds = ids;
+
+    if (mock) {
+      return this.handleMockDeleteMany(parsedIds);
+    }
+
+    return this.categoriesService.deleteMany(parsedIds);
   }
 
   @Get(':id')

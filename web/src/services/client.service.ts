@@ -58,14 +58,15 @@ export abstract class ClientService<
     return await response.json() as RecordType;
   };
 
-  delete = async (id: number, mock?: boolean) => {
-    const URL = `${this.URL}/${id}${mock ? `?mock=true` : ''}`;
+  delete = async (ids: number[], mock?: boolean) => {
+    const URL = `${this.URL}/delete${mock ? `?mock=true` : ''}`;
 
     const response = await fetch(URL, {
       ...this.DEFAULT_OPTIONS,
-      method: 'DELETE'
+      method: 'PATCH',
+      body: JSON.stringify(ids)
     });
 
-    return await response.json() as { raw: string; affectedRows: number; };
+    return await response.json() as { raw: string; affected: number; };
   };
 }

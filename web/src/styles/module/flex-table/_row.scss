@@ -9,4 +9,8 @@
   &.greenrow {
     background: var(--mantine-color-default);
   }
+
+  &.selected {
+    background: var(--mantine-primary-color-light);
+  }
 }

@@ -8,10 +8,19 @@ import { CancelButton } from "#modules/Core/components/buttons/CancelButton";
 
 export interface CategoryFormProps {
   initialValue?: CategoryRecord;
+  isBusy: boolean;
   onClose?: () => void;
+  onCreateSubmit: (...params: any[]) => void;
+  onUpdateSubmit: (...params: any[]) => void;
 }
 
-export function CategoryForm({ initialValue, onClose }: CategoryFormProps) {
+export function CategoryForm({
+  initialValue,
+  isBusy,
+  onUpdateSubmit,
+  onCreateSubmit,
+  onClose,
+}: CategoryFormProps) {
   const form = useForm({
     initialValues: initialValue ?? {
       name: "",
@@ -19,8 +28,21 @@ export function CategoryForm({ initialValue, onClose }: CategoryFormProps) {
     validate: zodResolver(CategoryValidator),
   });
 
+  const onSubmit = form.onSubmit((values) => {
+    if (initialValue) {
+      onUpdateSubmit({
+        ...initialValue,
+        ...values,
+      });
+    } else {
+      onCreateSubmit({
+        ...values,
+      });
+    }
+  });
+
   return (
-    <form>
+    <form onSubmit={onSubmit}>
       <Flex w="100%" h="100%" direction="column">
         <TextInput
           label="Name"
@@ -31,8 +53,8 @@ export function CategoryForm({ initialValue, onClose }: CategoryFormProps) {
       </Flex>
 
       <Group component="footer" justify="flex-end" mt="md">
-        <CancelButton onClick={onClose} />
-        <SubmitButton disabled={!form.isValid()} />
+        <CancelButton disabled={isBusy} onClick={onClose} />
+        <SubmitButton disabled={!form.isValid()} isBusy={isBusy} />
       </Group>
     </form>
   );

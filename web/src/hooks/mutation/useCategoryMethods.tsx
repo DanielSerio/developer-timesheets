@@ -33,6 +33,6 @@ export function useCategoryUpdate(mock?: boolean) {
 export function useCategoryDelete(mock?: boolean) {
   return useMutation({
     mutationKey: [...QUERY_KEYS.categories.delete, mock ? "mock" : undefined],
-    mutationFn: (id: number) => deleteMutationFn(id, mock),
+    mutationFn: (ids: number[]) => deleteMutationFn(ids, mock),
   });
 }

@@ -18,7 +18,7 @@ export function SubmitButton({
   icon,
   ...props
 }: SubmitButtonProps) {
-  const isDisabled = disabled ?? isBusy;
+  const isDisabled = disabled || isBusy;
   const Icon = icon ?? TbSend2;
   return (
     <Button

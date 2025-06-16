@@ -1,7 +1,7 @@
 import { Box, Flex, type MantineBreakpoint } from "@mantine/core";
 import { flexRender, type ColumnDef, type Table } from "@tanstack/react-table";
 import type { Dispatch, PropsWithChildren, SetStateAction } from "react";
-import { FlexTableRow } from "./FlexTableRow";
+import { FlexTableRow, FlexTableSkeletonRow } from "./FlexTableRow";
 import { FlexTableCell, FlexTableHeadCell } from "./FlexTableCell";
 
 export type FlexTableColumnConfig<T, TV = unknown> = ColumnDef<T, TV> & {
@@ -54,10 +54,6 @@ function FlexTableBase<T, TV = unknown>({
   breakpoint,
   children,
 }: FlexTableProps<T, TV>) {
-  if (isLoading) {
-    return <>Loading...</>;
-  }
-
   const gridTemplateColumns = getGridProfile<T, TV>(
     columns.filter((val) =>
       table.getVisibleFlatColumns().some((col) => col.id === val.id)
@@ -94,10 +90,21 @@ function FlexTableBase<T, TV = unknown>({
           </FlexTableRow>
         </FlexTableHeader>
         <FlexTableBody>
+          {isLoading &&
+            [...new Array(9)].map((_, index) => (
+              <FlexTableSkeletonRow
+                key={index}
+                breakpoint={breakpoint ?? "lg"}
+                gridTemplateColumns={gridTemplateColumns}
+                greenrow={index % 2 === 0}
+                columnCount={4}
+              />
+            ))}
           {table.getCoreRowModel().flatRows.map((row, index) => {
             return (
               <FlexTableRow
                 key={row.id}
+                isSelected={row.getIsSelected()}
                 breakpoint={breakpoint ?? "lg"}
                 gridTemplateColumns={gridTemplateColumns}
                 greenrow={index % 2 === 0}
