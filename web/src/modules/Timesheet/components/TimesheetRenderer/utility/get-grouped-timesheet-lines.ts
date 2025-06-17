@@ -1,10 +1,11 @@
 import type { TimesheetLineRecord } from "#types/entity/timesheet.types";
 
 export interface CategoryGroupedTimesheetLines {
-  [k: number]: TimesheetLineRecord[];
+  [k: number | string]: TimesheetLineRecord[];
 }
 
 export interface TimeGroupedTimesheetLines {
+  [k: string]: TimesheetLineRecord[];
   all: TimesheetLineRecord[];
 }
 
@@ -23,24 +24,23 @@ function getSortLinesByTime(date: string | Date) {
     const aEndDate = `${stamp} ${a.endTime}:00.000`;
     const bEndDate = `${stamp} ${b.endTime}:00.000`;
 
-    return Date.parse(bEndDate) - Date.parse(aEndDate);
+    return Date.parse(aEndDate) - Date.parse(bEndDate);
   };
 }
 
 export function getGroupedTimesheetLines({ by, lines, date }: GetGroupedTimesheetLinesProps): GroupedTimesheetLines {
   const sortingFn = getSortLinesByTime(date);
+  const sortedLines = lines.slice();
+
+  sortedLines.sort(sortingFn);
 
   if (by === 'by-time') {
-    const sortedLines = lines.slice();
-
-    sortedLines.sort(sortingFn);
-
     return { all: sortedLines } as TimeGroupedTimesheetLines;
   }
 
   const grouped: CategoryGroupedTimesheetLines = {};
 
-  for (const line of lines) {
+  for (const line of sortedLines) {
     if (!grouped[line.categoryId]) {
       grouped[line.categoryId] = [line];
     } else {

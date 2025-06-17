@@ -1,5 +1,6 @@
 import { TimesheetPage } from "#modules/Timesheet/pages/TimesheetPage";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import "#styles/output/timesheet.scss";
 
 export const Route = createFileRoute("/timesheets/$id")({
   beforeLoad(ctx) {
