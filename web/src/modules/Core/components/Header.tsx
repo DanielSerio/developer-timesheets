@@ -7,7 +7,7 @@ export function Header() {
   return (
     <>
       <AppShellHeader visibleFrom="xs" h={HEADER_HEIGHT}>
-        <Flex component="header" direction="column" wrap="wrap">
+        <Flex direction="column" wrap="wrap">
           <Flex align="center" justify="space-between" px="sm">
             <Text>Timesheets</Text>
 
@@ -17,7 +17,7 @@ export function Header() {
       </AppShellHeader>
       {/* Small Screens */}
       <AppShellHeader hiddenFrom="xs">
-        <Flex component="header" direction="column">
+        <Flex direction="column">
           <Flex
             align="center"
             justify="space-between"
