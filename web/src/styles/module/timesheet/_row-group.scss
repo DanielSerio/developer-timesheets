@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .timesheet-row-group header,
 .timesheet-row-group > ul > li {
   display: grid;
@@ -21,12 +23,12 @@
 }
 
 .timesheet-row-group .total-time {
-  color: mix(rgb(230, 119, 0), rgb(136, 136, 136), 33%);
+  color: color.mix(rgb(230, 119, 0), rgb(136, 136, 136), 33%);
 }
 
 .timesheet-row-group header {
   background: var(--mantine-color-dark-7);
-  border: 1px solid mix(rgb(230, 119, 0), rgb(76, 76, 76), 16%);
+  border: 1px solid color.mix(rgb(230, 119, 0), rgb(76, 76, 76), 16%);
   border-left: none;
   border-right: none;
 }
