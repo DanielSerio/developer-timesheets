@@ -1,9 +1,9 @@
 .timesheet-row-group header,
 .timesheet-row-group > ul > li {
   display: grid;
-  grid-template-columns: 1fr 7ch 7ch 7ch;
+  grid-template-columns: 7ch 1fr 7ch 7ch 7ch;
 }
 
 .timesheet-row-group .group-title {
-  grid-column: span 3;
+  grid-column: span 4;
 }
