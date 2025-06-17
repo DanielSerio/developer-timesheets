@@ -19,7 +19,7 @@ export const MOCK_TIMESHEET_LINES: MockTimesheetLineParams[] = [
   {
     categoryId: 4,
     startTime: '09:00',
-    endTime: '9:45',
+    endTime: '09:45',
     note: 'Create components'
   },
   {

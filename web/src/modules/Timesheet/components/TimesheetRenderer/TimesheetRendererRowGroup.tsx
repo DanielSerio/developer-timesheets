@@ -3,6 +3,11 @@ import type { CategoryRecord } from "#types/entity/category.types";
 import type { TimesheetLineRecord } from "#types/entity/timesheet.types";
 import { TimesheetRendererRow } from "./TimesheetRendererRow";
 import type { TimesheetViewMode } from "#modules/Timesheet/hooks/useTimesheetViewMode";
+import { getLineMinutes } from "#modules/Timesheet/utilities/get-line-time";
+import {
+  getLinesTimeSum,
+  getRunningTotal,
+} from "#modules/Timesheet/utilities/sum-line-times";
 
 export interface TimesheetRendererRowGroupProps {
   category?: CategoryRecord;
@@ -21,14 +26,15 @@ function TimesheetRendererCategoryRowGroup({
     <div className="timesheet-row-group categories">
       <Box component="header">
         <Text className="group-title">{category.name}</Text>
-        <Box className="total-time">00:00</Box>
+        <Box className="total-time">{getLinesTimeSum(lines)}</Box>
       </Box>
       <Box component="ul">
-        {lines.map((line) => (
+        {lines.map((line, index) => (
           <TimesheetRendererRow
             viewMode="by-category"
             key={line.id}
             row={line}
+            runningTotal={getRunningTotal(lines.slice(0, index))}
           />
         ))}
       </Box>
@@ -47,14 +53,15 @@ function TimesheetRendererTimeRowGroup({
     <div className="timesheet-row-group time">
       <Box component="header">
         <Text className="group-title">Time</Text>
-        <Box className="total-time">00:00</Box>
+        <Box className="total-time">{getLinesTimeSum(lines)}</Box>
       </Box>
       <Box component="ul">
-        {lines.map((line) => (
+        {lines.map((line, index) => (
           <TimesheetRendererRow
             viewMode="by-category"
             key={line.id}
             row={line}
+            runningTotal={getRunningTotal(lines.slice(0, index))}
           />
         ))}
       </Box>

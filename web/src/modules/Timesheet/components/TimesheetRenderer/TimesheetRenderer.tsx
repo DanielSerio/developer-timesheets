@@ -1,6 +1,6 @@
 import type { TimesheetViewMode } from "#modules/Timesheet/hooks/useTimesheetViewMode";
 import type { TimesheetLineRecord } from "#types/entity/timesheet.types";
-import { getGroupedTimesheetLines } from "./utility/get-grouped-timesheet-lines";
+import { getGroupedTimesheetLines } from "../../utilities/get-grouped-timesheet-lines";
 import { useCategoryList } from "#hooks/query/useCategoryList";
 import { TimesheetRendererRowGroup } from "./TimesheetRendererRowGroup";
 

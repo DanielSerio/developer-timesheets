@@ -1,5 +1,5 @@
 import { Page } from "#modules/Core/components/Page";
-import { Button, Radio, RadioGroup, Switch, TextInput } from "@mantine/core";
+import { Button, Flex, Group, Radio, Switch, TextInput } from "@mantine/core";
 import { useTimesheetPage } from "../hooks/useTimesheetPage";
 import type { TimesheetViewMode } from "../hooks/useTimesheetViewMode";
 import { TimesheetRenderer } from "../components/TimesheetRenderer/TimesheetRenderer";
@@ -21,29 +21,40 @@ export function TimesheetPage({
   const [viewMode, _toggle, setViewMode] = viewModeController;
   return (
     <Page>
-      <div>
-        <Switch
-          label="Edit Mode"
-          checked={isEditMode}
-          onChange={(ev) => {
-            console.info(ev);
-            setIsEditMode(ev.currentTarget.checked);
-          }}
-        />
-        <RadioGroup
-          value={viewMode}
-          onChange={(value) => setViewMode(value as TimesheetViewMode)}
-        >
-          <Radio disabled={!isEditMode} value="by-time" label="Time" />
-          <Radio disabled={!isEditMode} value="by-category" label="Category" />
-        </RadioGroup>
-        <Button color="red" disabled={!isEditMode}>
-          Delete Timesheet
-        </Button>
+      <Flex justify="space-between" wrap={"wrap"}>
         <div>
           <TextInput readOnly={!isEditMode} value={query.data?.name} />
         </div>
-      </div>
+        <Group wrap="wrap">
+          <Switch
+            label="Edit Mode"
+            checked={isEditMode}
+            onChange={(ev) => {
+              console.info(ev);
+              setIsEditMode(ev.currentTarget.checked);
+            }}
+          />
+          <Group>
+            <Radio
+              disabled={isEditMode}
+              value="by-time"
+              label="Time"
+              checked={viewMode === "by-time"}
+              onChange={() => setViewMode("by-time")}
+            />
+            <Radio
+              disabled={isEditMode}
+              value="by-category"
+              label="Category"
+              checked={viewMode === "by-category"}
+              onChange={() => setViewMode("by-category")}
+            ></Radio>
+          </Group>
+          <Button color="red" disabled={!isEditMode}>
+            Delete Timesheet
+          </Button>
+        </Group>
+      </Flex>
       <div>
         <TimesheetRenderer
           viewMode={viewMode}

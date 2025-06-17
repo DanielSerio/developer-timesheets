@@ -1,9 +1,45 @@
 .timesheet-row-group header,
 .timesheet-row-group > ul > li {
   display: grid;
-  grid-template-columns: 7ch 1fr 7ch 7ch 7ch;
+  grid-template-columns: 7ch 1fr 7ch 7ch 7ch 7ch;
+}
+
+.timesheet-row-group .group-title,
+.timesheet-row-group .total-time,
+.timesheet-row-group > ul > li > span {
+  padding: 3px 6px;
 }
 
 .timesheet-row-group .group-title {
-  grid-column: span 4;
+  grid-column: span 5;
+  font-weight: inherit;
+  color: white;
+}
+
+.timesheet-row-group .total-time {
+  color: mix(rgb(230, 119, 0), rgb(136, 136, 136), 33%);
+}
+
+.timesheet-row-group header {
+  background: var(--mantine-color-dark-7);
+  border: 1px solid mix(rgb(230, 119, 0), rgb(76, 76, 76), 16%);
+  border-left: none;
+  border-right: none;
+}
+
+.timesheet-row-group > ul {
+  padding: 0;
+  margin: 0;
+}
+
+.timesheet-row-group > ul > li {
+  background: var(--mantine-color-dark-8);
+
+  &:nth-child(odd) {
+    background: rgba(black, 0.275);
+  }
+
+  &:not(:last-of-type) {
+    border-bottom: 1px solid var(--mantine-color-dark-5);
+  }
 }
