@@ -1,0 +1,13 @@
+@media screen and (max-width: 784px) {
+  .timesheet-header {
+    .header-group,
+    .toolbar-group {
+      width: 100%;
+      padding: 6px;
+    }
+
+    .header-group {
+      border-bottom: 1px solid var(--mantine-color-default-border);
+    }
+  }
+}
