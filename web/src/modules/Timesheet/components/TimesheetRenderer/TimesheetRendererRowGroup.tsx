@@ -8,6 +8,7 @@ import {
   getLinesTimeSum,
   getRunningTotal,
 } from "#modules/Timesheet/utilities/sum-line-times";
+import { useCategoryList } from "#hooks/query/useCategoryList";
 
 export interface TimesheetRendererRowGroupProps {
   category?: CategoryRecord;
@@ -45,6 +46,8 @@ function TimesheetRendererCategoryRowGroup({
 function TimesheetRendererTimeRowGroup({
   lines,
 }: TimesheetRendererRowGroupProps) {
+  const categories = useCategoryList(true);
+
   if (!lines) {
     return <>Loading...</>;
   }
@@ -58,7 +61,8 @@ function TimesheetRendererTimeRowGroup({
       <Box component="ul">
         {lines.map((line, index) => (
           <TimesheetRendererRow
-            viewMode="by-category"
+            categories={categories.data}
+            viewMode="by-time"
             key={line.id}
             row={line}
             runningTotal={getRunningTotal(lines.slice(0, index))}

@@ -22,9 +22,9 @@ export function useTimesheetPage({
   const setIsEditMode = (value: boolean) => {
     if (value) {
       _setIsEditMode(true);
+      setViewMode(defaultViewMode ?? "by-time");
     } else {
       _setIsEditMode(false);
-      setViewMode(defaultViewMode ?? "by-time");
     }
   };
 
